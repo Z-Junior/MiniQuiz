@@ -5,35 +5,48 @@ public class MiniQuiz
     //-----------------------------------------------------------------
     //  Presents a short quiz.
     //-----------------------------------------------------------------
+
+    private final static Scanner SCAN = new Scanner(System.in);
+
     public static void main (String[] args)
     {
         Question q1, q2;
-        String possible;
-        Scanner scan = new Scanner(System.in);
 
-        q1 = new Question ("What is the capital of Jamaica?",
-                "Kingston");
+        q1 = new Question ("What is the capital of Jamaica?", "Kingston");
         q1.setComplexity (4);
 
-        q2 = new Question ("Which is worse, ignorance or apathy?",
-                "I don't know and I don't care");
+        q2 = new Question ("Which is worse, ignorance or apathy?", "I don't know and I don't care");
         q2.setComplexity (10);
 
-        System.out.print (q1.getQuestion());
-        System.out.println (" (Level: " + q1.getComplexity() + ")");
-        possible = scan.nextLine();
-        if (q1.answerCorrect(possible))
-            System.out.println ("Correct");
-        else
-            System.out.println ("No, the answer is " + q1.getAnswer());
+        askQuestion(q1);
+        askQuestion(q2);
+    }
 
-        System.out.println();
-        System.out.print (q2.getQuestion());
-        System.out.println (" (Level: " + q2.getComplexity() + ")");
-        possible = scan.nextLine();
-        if (q2.answerCorrect(possible))
-            System.out.println ("Correct");
+    public static void askQuestion(Question q)
+    {
+        System.out.println(String.format("%s (Level: %d)", q.getQuestion(), q.getComplexity()));
+
+        String sAnswer = PromptString("Enter answer: ");
+
+        if (q.answerCorrect(sAnswer))
+            System.out.println("Correct");
         else
-            System.out.println ("No, the answer is " + q2.getAnswer());
+            System.out.println(String.format("No, the answer is %s\r\n", q.getAnswer()));
+    }
+
+    protected static String PromptString(String question)
+    {
+        System.out.print(question);
+
+        while (!SCAN.hasNextLine())
+        {
+            System.out.flush();
+
+            System.out.print("Enter a string: ");
+
+            SCAN.next();
+        }
+
+        return SCAN.nextLine();
     }
 }
